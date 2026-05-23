@@ -16,7 +16,6 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  // my global Zustand store to read and update states
   const selectFolder = useFileStore((state) => state.selectFolder);
   const openFile = useFileStore((state) => state.openFile);
   const renameNode = useFileStore((state) => state.renameNode);
@@ -25,31 +24,26 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
   const openFileId = useFileStore((state) => state.openFileId);
 
   const isFolder = node.type === 'folder';
-
-  // highlighted if this is the currently active folder or file
   const isSelected = isFolder ? selectedFolderId === node.id : openFileId === node.id;
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (isFolder) {
-      // Toggle expand/collapse when clicking the folder
       setIsOpen((prev) => !prev);
-      // Also set it as the currently selected folder in the main panel
       selectFolder(node.id);
     } else {
-      // If it's a file, open it in the editor
       openFile(node.id);
     }
   };
 
   const handleRenameClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Don't trigger handleClick
+    e.stopPropagation();
     setIsRenameModalOpen(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Don't trigger handleClick
+    e.stopPropagation();
     const confirmed = window.confirm(
       `Delete "${node.name}"?${isFolder ? '\n\nThis will also delete all contents inside.' : ''}`
     );
@@ -59,29 +53,29 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
   };
 
   return (
-    // Wrap in a Fragment-like div so the rename modal can be a sibling
     <>
       <div className="select-none">
-        {/* node row — `group` class enables hover-based child visibility */}
         <div
           onClick={handleClick}
-          className={`group flex items-center py-1 px-2 cursor-pointer hover:bg-gray-100 rounded-md text-sm transition-colors
-            ${isSelected ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
-          style={{ paddingLeft: `${level * 12 + 8}px` }} // I have implemented this style for the indentation based on recursion depth
+          className={`group flex items-center py-1.5 px-2 cursor-pointer rounded-lg text-sm transition-all duration-200 mt-0.5
+            ${isSelected 
+              ? 'bg-blue-100/60 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium' 
+              : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50'}`}
+          style={{ paddingLeft: `${level * 12 + 8}px` }}
         >
           {/* chevron icon for folders only */}
           <div className="w-4 h-4 mr-1 flex items-center justify-center">
             {isFolder && (
-              isOpen ? <ChevronDown size={14} className="text-gray-500" /> : <ChevronRight size={14} className="text-gray-500" />
+              isOpen ? <ChevronDown size={14} className="text-zinc-400" /> : <ChevronRight size={14} className="text-zinc-400" />
             )}
           </div>
 
           {/* file or folder type icon */}
-          <div className="mr-2">
+          <div className="mr-2 transition-transform duration-200 group-hover:scale-110">
             {isFolder ? (
-              isOpen ? <FolderOpen size={16} className={isSelected ? "text-blue-600" : "text-blue-500"} /> : <Folder size={16} className={isSelected ? "text-blue-600" : "text-blue-500"} />
+              isOpen ? <FolderOpen size={16} className={isSelected ? "text-blue-600 dark:text-blue-400" : "text-blue-500"} /> : <Folder size={16} className={isSelected ? "text-blue-600 dark:text-blue-400" : "text-blue-500"} />
             ) : (
-              <FileText size={16} className={isSelected ? "text-blue-600" : "text-gray-400"} />
+              <FileText size={16} className={isSelected ? "text-blue-600 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"} />
             )}
           </div>
 
@@ -91,25 +85,23 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
             <button
               onClick={handleRenameClick}
               title="Rename"
-              className="p-0.5 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              className="p-1 rounded-md text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
             >
-              <Pencil size={11} />
+              <Pencil size={12} />
             </button>
             <button
               onClick={handleDelete}
               title="Delete"
-              className="p-0.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              className="p-1 rounded-md text-zinc-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
             >
-              <Trash2 size={11} />
+              <Trash2 size={12} />
             </button>
           </div>
         </div>
 
-        {/* recursive step for render children if this folder is open */}
+        {/* recursive children */}
         {isFolder && isOpen && node.children && (
           <div className="flex flex-col">
-            {/* map through each child and render another TreeNode component. 
-                increment the level so indentation increases. */}
             {node.children.map((child) => (
               <TreeNode key={child.id} node={child} level={level + 1} />
             ))}

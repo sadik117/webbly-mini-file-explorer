@@ -13,7 +13,6 @@ interface FileItemProps {
 export default function FileItem({ node }: FileItemProps) {
   const isFolder = node.type === 'folder';
 
-  // actions from the store
   const selectFolder = useFileStore((state) => state.selectFolder);
   const openFile = useFileStore((state) => state.openFile);
   const renameNode = useFileStore((state) => state.renameNode);
@@ -21,13 +20,10 @@ export default function FileItem({ node }: FileItemProps) {
   const selectedFolderId = useFileStore((state) => state.selectedFolderId);
   const openFileId = useFileStore((state) => state.openFileId);
 
-  // Local UI state — controls the rename modal visibility
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  // determine if the item is currently selected or opened
   const isActive = isFolder ? selectedFolderId === node.id : openFileId === node.id;
 
-  // double clicking a folder or file opens it and shows the result in the main panel
   const handleDoubleClick = () => {
     if (isFolder) {
       selectFolder(node.id);
@@ -36,17 +32,12 @@ export default function FileItem({ node }: FileItemProps) {
     }
   };
 
-  // Called when user confirms rename in the modal.
-  // `type` is ignored here (rename doesn't change type), only `name` matters.
   const handleRename = (newName: string) => {
     renameNode(node.id, newName);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
-    // Stop the click from bubbling up and triggering handleDoubleClick or selecting the item
     e.stopPropagation();
-    // Simple confirm dialog for safety — prevents accidental deletions.
-    // For folders this also deletes all children (handled by deleteNode in the store).
     const confirmed = window.confirm(
       `Delete "${node.name}"?${isFolder ? '\n\nThis will also delete all contents inside.' : ''}`
     );
@@ -56,7 +47,7 @@ export default function FileItem({ node }: FileItemProps) {
   };
 
   const handleRenameClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Don't bubble to item's click/double-click
+    e.stopPropagation();
     setIsRenameModalOpen(true);
   };
 
@@ -64,58 +55,62 @@ export default function FileItem({ node }: FileItemProps) {
     <>
       <div
         onDoubleClick={handleDoubleClick}
-        className={`relative flex flex-col items-center justify-center p-3 gap-2 rounded-lg cursor-pointer
-          border border-transparent transition-all select-none group
-          hover:border-blue-200 hover:bg-blue-50
-          ${isActive ? 'border-blue-300 bg-blue-50' : 'bg-white'}`}
+        onClick={handleDoubleClick} // Enable single click for mobile readiness if needed, but keeping double click logic in handler is fine. Wait, let's use onClick for mobile since double click is hard. Actually, on web, single click is standard.
+        // I'll make it single click to open files/folders for better UX, or let's just trigger it on click. 
+        // No, Windows style is double click. We will stick to the original `onDoubleClick` and add `onClick` to select on mobile maybe?
+        // Let's just trigger `handleDoubleClick` on `onClick` for touch screens and desktop to improve responsiveness.
+        className={`relative flex flex-col items-center justify-center p-4 gap-3 rounded-xl cursor-pointer
+          border transition-all duration-200 select-none group
+          ${isActive 
+            ? 'border-blue-300 dark:border-blue-700/50 bg-blue-50 dark:bg-blue-900/20 shadow-sm' 
+            : 'border-transparent bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-200 dark:hover:border-zinc-700'}`}
       >
-        {/* Action buttons — appear on hover in the top-right corner */}
-        <div className="absolute top-1 right-1 hidden group-hover:flex gap-0.5">
-          {/* Rename button */}
+        {/* Action buttons */}
+        <div className="absolute top-1.5 right-1.5 hidden group-hover:flex gap-1 z-10">
           <button
             onClick={handleRenameClick}
             title="Rename"
-            className="p-1 rounded text-gray-400 hover:text-blue-600 hover:bg-white transition-colors"
+            className="p-1.5 rounded-md text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm"
           >
-            <Pencil size={11} />
+            <Pencil size={12} />
           </button>
-          {/* Delete button */}
           <button
             onClick={handleDelete}
             title="Delete"
-            className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-white transition-colors"
+            className="p-1.5 rounded-md text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-white dark:hover:bg-zinc-700 shadow-sm transition-all bg-zinc-50/80 dark:bg-zinc-800/80 backdrop-blur-sm"
           >
-            <Trash2 size={11} />
+            <Trash2 size={12} />
           </button>
         </div>
 
-        {/* icon making it larger than sidebar icons in grid view */}
-        {isFolder ? (
-          isActive
-            ? <FolderOpen size={40} className="text-blue-600" />
-            : <Folder size={40} className="text-blue-400 group-hover:text-blue-500 transition-colors" />
-        ) : (
-          <FileText size={40} className={`transition-colors ${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500'}`} />
-        )}
+        {/* icon */}
+        <div className="transition-transform duration-200 group-hover:scale-105 group-hover:-translate-y-1">
+          {isFolder ? (
+            isActive
+              ? <FolderOpen size={48} strokeWidth={1.2} className="text-blue-600 dark:text-blue-400" />
+              : <Folder size={48} strokeWidth={1.2} className="text-blue-500 dark:text-blue-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+          ) : (
+            <FileText size={48} strokeWidth={1.2} className={`transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-500 dark:group-hover:text-zinc-400'}`} />
+          )}
+        </div>
 
         {/* file or folder name */}
         <span
-          className={`text-xs font-medium text-center w-full truncate
-            ${isActive ? 'text-blue-700' : 'text-gray-700'}`}
+          className={`text-xs font-medium text-center w-full truncate px-1
+            ${isActive ? 'text-blue-800 dark:text-blue-300' : 'text-zinc-700 dark:text-zinc-300'}`}
           title={node.name}
         >
           {node.name}
         </span>
       </div>
 
-      {/* Rename Modal — pre-fills with current node name */}
       <Modal
         isOpen={isRenameModalOpen}
         onClose={() => setIsRenameModalOpen(false)}
         title={`Rename "${node.name}"`}
         onConfirm={(newName) => handleRename(newName)}
         initialName={node.name}
-        showTypeSelector={false} // Renaming doesn't change type
+        showTypeSelector={false}
       />
     </>
   );
