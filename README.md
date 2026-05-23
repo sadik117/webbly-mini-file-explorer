@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📁 Wembbly Mini File Explorer
+
+A modern, highly responsive, and feature-rich mini file explorer built with **Next.js**, **Tailwind CSS**, and **Zustand**. It provides a sleek interface to create, manage, and edit your files and folders seamlessly within your browser.
+
+## Live Demo
+https://wembbly-mini-file-explorer.vercel.app
+
+## Features
+
+- **Intuitive File Management**: Create, rename, and delete both files and folders with ease.
+- **Nested Folder Structure**: A fully functional recursive sidebar that elegantly displays deeply nested directories.
+- **Built-in Text Editor**: Edit your text files directly in the browser. Supports keyboard shortcuts (e.g., `Ctrl + S` to save).
+- **Seamless Dark & Light Mode**: Premium dark mode support implemented using `next-themes` and Tailwind v4, ensuring no hydration mismatch.
+- **📱 Fully Responsive**: 
+  - **Desktop**: A comfortable, side-by-side view of your explorer and editor.
+  - **Mobile**: The sidebar transforms into an off-canvas drawer with a blurred backdrop, and the editor takes full screen for distraction-free typing.
+- **State Persistence**: Your files, folders, and edits are saved locally using Zustand's persist middleware.
+- **Premium Aesthetics**: Features glassmorphism effects (`backdrop-blur`), subtle shadows, smooth micro-animations, and carefully crafted UI elements for a state-of-the-art feel.
+
+## Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand) (with persist middleware)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Theming**: [next-themes](https://github.com/pacocoursey/next-themes)
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to get a copy of the project up and running on your local machine.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Make sure you have [Node.js](https://nodejs.org/) installed. This project uses [Bun](https://bun.sh/) as the package manager, but you can also use `npm`, `yarn`, or `pnpm`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sadik117/webbly-mini-file-explorer.git
+   ```
 
-## Learn More
+2. Navigate into the project directory:
+   ```bash
+   cd webbly-mini-file-explorer
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Install the dependencies:
+   ```bash
+   bun install
+   # or npm install / yarn install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Start the development server:
+   ```bash
+   bun run dev
+   # or npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Open your browser and navigate to `http://localhost:3000` to see the app in action!
 
-## Deploy on Vercel
+## ⌨️ Keyboard Shortcuts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `Ctrl + S` / `Cmd + S` : Save the currently open file in the text editor.
+- `Escape` : Close active modals (Rename, Create New).

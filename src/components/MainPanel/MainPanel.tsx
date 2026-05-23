@@ -48,11 +48,11 @@ export default function MainPanel() {
         {/* button to open create modal */}
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold tracking-wide
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold tracking-wide
             bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-blue-500/25 transition-all"
         >
           <Plus size={14} />
-          New
+         Add New
         </button>
       </div>
 
