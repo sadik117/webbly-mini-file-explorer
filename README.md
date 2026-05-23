@@ -63,3 +63,15 @@ Make sure you have [Node.js](https://nodejs.org/) installed. This project uses [
 
 - `Ctrl + S` / `Cmd + S` : Save the currently open file in the text editor.
 - `Escape` : Close active modals (Rename, Create New).
+
+## 🚀 Future Enhancements & Updates
+
+We are continuously working to improve the Wembbly Mini File Explorer. Here are some of the features and updates planned for future releases:
+
+- **Drag and Drop**: Reorganize files and folders seamlessly using an intuitive drag-and-drop interface.
+- **Search Functionality**: A robust search bar to quickly find nested files or folders by name anywhere in your workspace.
+- **Multi-File Tabs**: Open multiple files simultaneously using a tabbed editor interface so you can switch between them easily.
+- **Syntax Highlighting**: Expand the text editor to support code syntax highlighting for common programming languages (e.g., JS, TS, JSON, HTML).
+- **File Sorting & Filtering**: Sort files and folders by name, size, or creation date in the main panel.
+- **Context Menus**: Add right-click context menus for quicker actions (rename, delete, duplicate, etc.).
+- **Cloud Sync Integration**: Optional integration with cloud storage providers to persist your workspace across different devices and sessions.
