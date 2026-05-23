@@ -2,6 +2,10 @@ import { FileNode } from '@/types';
 
 export function findNode(nodes: FileNode[], id: string): FileNode | null {
 
+  // I used here a for...of loop instead of .map() because it returns early the moment that the node will be found,
+  // .map() always processes the entire array and has no early exit,
+  // for...of let us return immediately when found.
+  // the complexity is O(n) where n is the number of nodes in the tree, which is optimal.
   for (const node of nodes) {
     if (node.id === id) return node;
 

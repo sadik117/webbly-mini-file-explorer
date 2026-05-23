@@ -11,24 +11,23 @@ interface TreeNodeProps {
 }
 
 export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
-  // Local state for UI: track if this folder is expanded in the sidebar.
-  // This is UI state, NOT data state, so it lives in the component, not Zustand.
+
   const [isOpen, setIsOpen] = useState(false);
-  
-  // Connect to our global Zustand store to read/write state
+
+  // my global Zustand store to read and update states
   const selectFolder = useFileStore((state) => state.selectFolder);
   const openFile = useFileStore((state) => state.openFile);
   const selectedFolderId = useFileStore((state) => state.selectedFolderId);
   const openFileId = useFileStore((state) => state.openFileId);
 
   const isFolder = node.type === 'folder';
-  
-  // Highlight if this is the currently active folder or file
+
+  // highlighted if this is the currently active folder or file
   const isSelected = isFolder ? selectedFolderId === node.id : openFileId === node.id;
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent clicking from triggering parent folder clicks
-    
+    e.stopPropagation();
+
     if (isFolder) {
       // Toggle expand/collapse when clicking the folder
       setIsOpen((prev) => !prev);
@@ -42,21 +41,21 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
 
   return (
     <div className="select-none">
-      {/* Node Row */}
+      {/* node row */}
       <div
         onClick={handleClick}
         className={`flex items-center py-1 px-2 cursor-pointer hover:bg-gray-100 rounded-md text-sm transition-colors
           ${isSelected ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
-        style={{ paddingLeft: `${level * 12 + 8}px` }} // Dynamic indentation based on recursion depth
+        style={{ paddingLeft: `${level * 12 + 8}px` }} // I have implemented this style for the indentation based on recursion depth
       >
-        {/* Chevron icon for folders only */}
+        {/* chevron icon for folders only */}
         <div className="w-4 h-4 mr-1 flex items-center justify-center">
           {isFolder && (
             isOpen ? <ChevronDown size={14} className="text-gray-500" /> : <ChevronRight size={14} className="text-gray-500" />
           )}
         </div>
-        
-        {/* File/Folder Type Icon */}
+
+        {/* file or folder type icon */}
         <div className="mr-2">
           {isFolder ? (
             isOpen ? <FolderOpen size={16} className={isSelected ? "text-blue-600" : "text-blue-500"} /> : <Folder size={16} className={isSelected ? "text-blue-600" : "text-blue-500"} />
@@ -64,16 +63,16 @@ export default function TreeNode({ node, level = 0 }: TreeNodeProps) {
             <FileText size={16} className={isSelected ? "text-blue-600" : "text-gray-400"} />
           )}
         </div>
-        
-        {/* Node Name */}
+
+        {/* node name */}
         <span className="truncate">{node.name}</span>
       </div>
 
-      {/* RECURSIVE STEP: Render children if this folder is open */}
+      {/* recursive step for render children if this folder is open */}
       {isFolder && isOpen && node.children && (
         <div className="flex flex-col">
-          {/* Map through each child and render another TreeNode component. 
-              Increment the level so indentation increases. */}
+          {/* map through each child and render another TreeNode component. 
+              increment the level so indentation increases. */}
           {node.children.map((child) => (
             <TreeNode key={child.id} node={child} level={level + 1} />
           ))}
